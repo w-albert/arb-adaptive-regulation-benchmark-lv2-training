@@ -140,97 +140,97 @@ else
 end
 %% PSD ANALYSIS
 % calculate the psd after convergence
-SW_LONG_FFT = 0;
-if SW_LONG_FFT
-    SPEC_CAL_REGION = 12/Ts:13/Ts;
-    L = length(y.signals.values(SPEC_CAL_REGION));
-    NFFT = 2^nextpow2(L); % Next power of 2 from length of y
-else
-    SPEC_CAL_REGION = 16/Ts:19/Ts; %11/Ts:14/Ts; 2012-08-26
-    NFFT = 512;
-end
-[specY.f,specY.amp] = spectre_psd_rms(y.signals.values(SPEC_CAL_REGION),Fs,NFFT);
-if ii == 1 && jj == 1
-    level2_freq_dom_result_const_freq.y_psd{1,1} = 'freq';
-    level2_freq_dom_result_const_freq.y_psd{1,2} = 'openLoop';
-    level2_freq_dom_result_const_freq.y_psd{1,3} = 'closedLoop';
-end
-level2_freq_dom_result_const_freq.y_psd{ii+1,jj+1} = specY;
-if jj == 1
-    level2_freq_dom_result_const_freq.readme =...
-        {'col 1: freq in Hz';...
-        'col 2,3: psd at narrow band w/o attenuation';...
-        'col 4,5: psd at narrow band w/ attenuation';...
-        'for narrow_band_attenuation: col 1--first band; col 2--second band'};
-    level2_freq_dom_result_const_freq.narrow_band_psd{ii,1} =...
-        num2str(NBf);
-end
-
-if jj == 1
-    level2_freq_dom_result_const_freq.narrow_band_psd{ii,1+(jj-1)*2+1} =...
-        max(specY.amp(abs(specY.f - NBf(1))<2)); % 2010-09-26
-    level2_freq_dom_result_const_freq.narrow_band_psd{ii,1+(jj-1)*2+2} =...
-        max(specY.amp(abs(specY.f - NBf(2))<2)); % 2010-09-26
-    
-    freqMax1 = specY.f(...
-        level2_freq_dom_result_const_freq.narrow_band_psd{ii,1+(jj-1)*2+1}==...
-        specY.amp);
-    
-    freqMax2 = specY.f(...
-        level2_freq_dom_result_const_freq.narrow_band_psd{ii,1+(jj-1)*2+2}==...
-        specY.amp);
-end
-if jj == 2
-    level2_freq_dom_result_const_freq.narrow_band_psd{ii,1+(jj-1)*2+1} =...
-        specY.amp(specY.f==freqMax1); % 2010-09-26
-    level2_freq_dom_result_const_freq.narrow_band_psd{ii,1+(jj-1)*2+2} =...
-        specY.amp(specY.f==freqMax2); % 2010-09-26
-end
-
-if jj == 2
-    level2_freq_dom_result_const_freq.narrow_band_attenuation{ii,1} =...
-        level2_freq_dom_result_const_freq.narrow_band_psd{ii,2} - ...
-        level2_freq_dom_result_const_freq.narrow_band_psd{ii,4};
-    
-    level2_freq_dom_result_const_freq.narrow_band_attenuation{ii,2} =...
-        level2_freq_dom_result_const_freq.narrow_band_psd{ii,3} - ...
-        level2_freq_dom_result_const_freq.narrow_band_psd{ii,5};
-    
-    specY_ol = level2_freq_dom_result_const_freq.y_psd{ii+1,2};
-    
-    level2_freq_dom_result_const_freq.psd_amplify{ii,1} =...
-        num2str(NBf);
-    level2_freq_dom_result_const_freq.psd_amplify{ii,3} =...
-        max(specY.amp(10:end) - specY_ol.amp(10:end));
-    %     the index freq of the maximum amplification
-    level2_freq_dom_result_const_freq.psd_amplify{ii,2} =...
-        specY.f(...
-        (specY.amp - specY_ol.amp)==...
-        level2_freq_dom_result_const_freq.psd_amplify{ii,3}...
-        );
-end
-
-h = figure(FIG_NUMBER_CONST_DIST_FREQ(ii));
-grid on; hold on;
-if jj == 1
-    plot(specY.f,specY.amp,'r')
-    %     plot('v6',specY.f,specY.amp,'r')
-else
-    plot(specY.f,specY.amp,'k--')
-    %     plot('v6',specY.f,specY.amp,'k--')
-    
-    xlabel('Frequency [Hz]')
-    ylabel('dB [Vrms]')
-    title('Spectral density of the plant output')
-    
-    legend('open loop','closed loop')
-    if SW_SAVE_DATA
-        hgsave(h,['level2_spectrum_',...
-            num2str(freq_test1(ii)),'_',...
-            num2str(freq_test2(ii)),...
-            'Hz_compare'])
-    end
-end
+% SW_LONG_FFT = 0;
+% if SW_LONG_FFT
+%     SPEC_CAL_REGION = 12/Ts:13/Ts;
+%     L = length(y.signals.values(SPEC_CAL_REGION));
+%     NFFT = 2^nextpow2(L); % Next power of 2 from length of y
+% else
+%     SPEC_CAL_REGION = 16/Ts:19/Ts; %11/Ts:14/Ts; 2012-08-26
+%     NFFT = 512;
+% end
+% [specY.f,specY.amp] = spectre_psd_rms(y.signals.values(SPEC_CAL_REGION),Fs,NFFT);
+% if ii == 1 && jj == 1
+%     level2_freq_dom_result_const_freq.y_psd{1,1} = 'freq';
+%     level2_freq_dom_result_const_freq.y_psd{1,2} = 'openLoop';
+%     level2_freq_dom_result_const_freq.y_psd{1,3} = 'closedLoop';
+% end
+% level2_freq_dom_result_const_freq.y_psd{ii+1,jj+1} = specY;
+% if jj == 1
+%     level2_freq_dom_result_const_freq.readme =...
+%         {'col 1: freq in Hz';...
+%         'col 2,3: psd at narrow band w/o attenuation';...
+%         'col 4,5: psd at narrow band w/ attenuation';...
+%         'for narrow_band_attenuation: col 1--first band; col 2--second band'};
+%     level2_freq_dom_result_const_freq.narrow_band_psd{ii,1} =...
+%         num2str(NBf);
+% end
+% 
+% if jj == 1
+%     level2_freq_dom_result_const_freq.narrow_band_psd{ii,1+(jj-1)*2+1} =...
+%         max(specY.amp(abs(specY.f - NBf(1))<2)); % 2010-09-26
+%     level2_freq_dom_result_const_freq.narrow_band_psd{ii,1+(jj-1)*2+2} =...
+%         max(specY.amp(abs(specY.f - NBf(2))<2)); % 2010-09-26
+%     
+%     freqMax1 = specY.f(...
+%         level2_freq_dom_result_const_freq.narrow_band_psd{ii,1+(jj-1)*2+1}==...
+%         specY.amp);
+%     
+%     freqMax2 = specY.f(...
+%         level2_freq_dom_result_const_freq.narrow_band_psd{ii,1+(jj-1)*2+2}==...
+%         specY.amp);
+% end
+% if jj == 2
+%     level2_freq_dom_result_const_freq.narrow_band_psd{ii,1+(jj-1)*2+1} =...
+%         specY.amp(specY.f==freqMax1); % 2010-09-26
+%     level2_freq_dom_result_const_freq.narrow_band_psd{ii,1+(jj-1)*2+2} =...
+%         specY.amp(specY.f==freqMax2); % 2010-09-26
+% end
+% 
+% if jj == 2
+%     level2_freq_dom_result_const_freq.narrow_band_attenuation{ii,1} =...
+%         level2_freq_dom_result_const_freq.narrow_band_psd{ii,2} - ...
+%         level2_freq_dom_result_const_freq.narrow_band_psd{ii,4};
+%     
+%     level2_freq_dom_result_const_freq.narrow_band_attenuation{ii,2} =...
+%         level2_freq_dom_result_const_freq.narrow_band_psd{ii,3} - ...
+%         level2_freq_dom_result_const_freq.narrow_band_psd{ii,5};
+%     
+%     specY_ol = level2_freq_dom_result_const_freq.y_psd{ii+1,2};
+%     
+%     level2_freq_dom_result_const_freq.psd_amplify{ii,1} =...
+%         num2str(NBf);
+%     level2_freq_dom_result_const_freq.psd_amplify{ii,3} =...
+%         max(specY.amp(10:end) - specY_ol.amp(10:end));
+%     %     the index freq of the maximum amplification
+%     level2_freq_dom_result_const_freq.psd_amplify{ii,2} =...
+%         specY.f(...
+%         (specY.amp - specY_ol.amp)==...
+%         level2_freq_dom_result_const_freq.psd_amplify{ii,3}...
+%         );
+% end
+% 
+% h = figure(FIG_NUMBER_CONST_DIST_FREQ(ii));
+% grid on; hold on;
+% if jj == 1
+%     plot(specY.f,specY.amp,'r')
+%     %     plot('v6',specY.f,specY.amp,'r')
+% else
+%     plot(specY.f,specY.amp,'k--')
+%     %     plot('v6',specY.f,specY.amp,'k--')
+%     
+%     xlabel('Frequency [Hz]')
+%     ylabel('dB [Vrms]')
+%     title('Spectral density of the plant output')
+%     
+%     legend('open loop','closed loop')
+%     if SW_SAVE_DATA
+%         hgsave(h,['level2_spectrum_',...
+%             num2str(freq_test1(ii)),'_',...
+%             num2str(freq_test2(ii)),...
+%             'Hz_compare'])
+%     end
+% end
 %% PARAMETER ESTIMATION
 if jj == 2
     eta1vector = theta_hat.signals.values(:,1);%eta1 = -lambda1-lambda2
